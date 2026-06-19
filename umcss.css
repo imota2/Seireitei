@@ -3,12 +3,12 @@
     --panel-bg: rgba(9, 9, 11, 0.4); 
     --border-color: rgba(39, 39, 42, 0.6); 
     --text-main: #e4e4e7; 
-    --rangiku-pink: #ff62ea; 
+    --rukia-pink: #ff62ea; 
 }
 
 /* --- Scrollbar Estilizada --- */
 ::-webkit-scrollbar { 
-    width: 4px; 
+    width: 2px; 
 }
 ::-webkit-scrollbar-track { 
     background: transparent; 
@@ -17,7 +17,7 @@
     background: #27272a; 
 }
 ::-webkit-scrollbar-thumb:hover { 
-    background: var(--rangiku-pink); 
+    background: var(--rukia-pink); 
 }
 
 /* --- Base e Estrutura Geral --- */
@@ -47,7 +47,7 @@ body {
     }
 }
 
-.msg-user, .msg-rangiku {
+.msg-user, .msg-rukia {
     padding: 8px 12px;
     max-width: 85%;
     font-size: 0.8rem;
@@ -55,10 +55,10 @@ body {
     border-bottom: 1px dashed rgba(63, 63, 70, 0.3);
 }
 
-.msg-rangiku {
+.msg-rukia {
     align-self: flex-start;
     color: #f4f4f5; 
-    border-left: 3px solid var(--rangiku-pink);
+    border-left: 3px solid var(--rukia-pink);
     background: rgba(255, 98, 234, 0.03);
 }
 
@@ -90,7 +90,7 @@ body {
 }
 
 .segredo-item:hover {
-    border-left-color: var(--rangiku-pink);
+    border-left-color: var(--rukia-pink);
     background: rgba(255, 98, 234, 0.02);
 }
 
@@ -132,7 +132,7 @@ input:-webkit-autofill:focus {
     background: rgba(10, 10, 10, 0.95);
     color: #e4e4e7; 
     border: 1px solid rgba(63, 63, 70, 0.4);
-    border-left: 4px solid var(--rangiku-pink);
+    border-left: 4px solid var(--rukia-pink);
     padding: 14px 28px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.75rem;

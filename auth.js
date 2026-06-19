@@ -7,11 +7,12 @@ const supabaseClient = createClient(
 
 const screenIntro = document.getElementById('screen-intro');
 const screenLogin = document.getElementById('screen-login');
+const screenName = document.getElementById('screen-name');
 
-// Alterna entre a Intro e o Login internamente
 function navegarPara(idTela) {
     if (screenIntro) screenIntro.classList.add('hidden');
     if (screenLogin) screenLogin.classList.add('hidden');
+    if (screenName) screenName.classList.add('hidden');
     
     const telaAtiva = document.getElementById(idTela);
     if (telaAtiva) {
@@ -29,13 +30,12 @@ function mostrarPopup(mensagem) {
     if (!container) return;
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerText = mensagem;
+    toast.innerText = message = mensagem;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
 
 window.addEventListener('load', () => {
-    // Efeito Shunpo inicial na Intro
     if (screenIntro) {
         setTimeout(() => {
             screenIntro.style.transition = "opacity 0.8s ease-out";
@@ -43,12 +43,11 @@ window.addEventListener('load', () => {
         }, 50);
     }
 
-    // 1. Avançar da Intro para o Login
     document.getElementById('btn-ir-para-login')?.addEventListener('click', () => {
         navegarPara('screen-login');
     });
 
-    // 2. Executar login e mandar para a página separada
+    // Executar login e verificar o nome do Shinigami
     document.getElementById('btn-executar-login')?.addEventListener('click', async () => {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
@@ -66,15 +65,53 @@ window.addEventListener('load', () => {
                 return;
             }
 
-            mostrarPopup("Bem-vindo à Soul Society.");
-            
-            // Redireciona para o arquivo separado do Dashboard após sucesso!
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1200);
+            // Verifica se o usuário já tem um nome cadastrado nos metadados
+            const userMetadata = data.user?.user_metadata;
+            if (userMetadata && userMetadata.display_name) {
+                mostrarPopup("Bem-vindo de volta à Soul Society.");
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1200);
+            } else {
+                // Se não tiver nome, abre a tela de registro de nome
+                mostrarPopup("Identidade pendente. Registre seu nome.");
+                setTimeout(() => {
+                    navegarPara('screen-name');
+                }, 1000);
+            }
 
         } catch (err) {
             mostrarPopup("Erro inesperado ao conectar.");
+        }
+    });
+
+    // Salvar o nome escolhido no Supabase Auth e redirecionar
+    document.getElementById('btn-salvar-nome')?.addEventListener('click', async () => {
+        const nomeEscolhido = document.getElementById('escolher-nome').value.trim();
+
+        if (!nomeEscolhido) {
+            mostrarPopup("Sua alma precisa de uma assinatura! Digite um nome.");
+            return;
+        }
+
+        try {
+            // Atualiza os metadados do usuário atual no Supabase Auth
+            const { error } = await supabaseClient.auth.updateUser({
+                data: { display_name: nomeEscolhido }
+            });
+
+            if (error) {
+                mostrarPopup("Erro ao selar nome: " + error.message);
+                return;
+            }
+
+            mostrarPopup("Reiatsu Sincronizada! Entrando no painel...");
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500);
+
+        } catch (err) {
+            mostrarPopup("Erro ao processar assinatura.");
         }
     });
 });

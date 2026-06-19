@@ -6,6 +6,23 @@
     <title>Seireitei — Terminal de Comando Central</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="umcss.css">
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+        .cursor-zoom-in {
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+        }
+        .cursor-zoom-in:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col items-center justify-between antialiased">
     
@@ -13,72 +30,251 @@
 
     <div id="app" class="w-full max-w-5xl flex-1 flex flex-col justify-center px-4 py-8 md:py-12">
         
-        <header class="flex flex-col-reverse md:block text-center mb-8 md:mb-12 relative select-none">
+        <header class="flex flex-col md:flex-row md:items-end md:justify-between border-b border-zinc-900 pb-6 mb-8 md:mb-12 relative select-none gap-6 text-center md:text-left">
+            <div>
+                <p class="text-[10px] tracking-[0.5em] text-zinc-400 uppercase mb-2 font-mono">// PAINEL DE CONTROLE</p>
+                <h1 class="font-serif font-bold text-4xl md:text-5xl tracking-[0.25em] text-white uppercase">SOUL SOCIETY</h1>
+                <p id="user-email-header" class="text-zinc-300 text-[11px] tracking-[0.15em] mt-2 uppercase font-mono"></p>
+            </div>
             
-            <div class="mx-auto mb-6 md:mb-0 md:absolute md:top-0 md:right-0 relative inline-block z-50">
-                
-                <button id="menu-btn" onclick="toggleMenu()" class="border border-zinc-800 text-zinc-400 px-5 py-2 text-xs font-semibold tracking-[0.2em] hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase shadow-md w-full md:w-auto">
-                    SENKAIMON
+            <div class="flex flex-col sm:flex-row gap-2 justify-center md:justify-end items-center z-50 w-full md:w-auto">
+                <button id="btn-galeria-coelhos" onclick="abrirGaleria()" class="border border-zinc-800 text-zinc-300 px-4 py-2 text-[10px] font-mono tracking-[0.15em] hover:border-amber-700/50 hover:text-amber-400 transition-all duration-300 uppercase shadow-md w-full sm:w-auto whitespace-nowrap">
+                    🐰 RELATÓRIOS ILUSTRADOS
                 </button>
 
-                <div id="settings-menu" style="display: none;" class="absolute top-full mt-2 left-1/2 -translate-x-1/2 md:left-auto md:right-0 md:translate-x-0 border border-zinc-800/80 backdrop-blur-md bg-zinc-950/95 p-5 w-64 shadow-2xl shadow-black text-left">
-                    <p id="user-display" class="text-zinc-500 text-[10px] tracking-widest uppercase mb-4 font-mono">// Identidade Carregada</p>
-                    
-                    <input id="input-nome" type="text" placeholder="Alterar Assinatura de Reiatsu..." class="w-full bg-zinc-900/60 p-2.5 text-xs mb-3 border border-zinc-800 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all font-mono">
-                    
-                    <button id="btn-salvar" class="w-full border border-zinc-800 text-zinc-400 py-2 text-xs font-semibold tracking-widest hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase">
-                        SINCRONIZAR
+                <div class="relative w-full sm:w-auto">
+                    <button id="menu-btn" onclick="toggleMenu()" class="border border-zinc-400 text-zinc-400 px-5 py-2 text-xs font-semibold tracking-[0.2em] hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase shadow-md w-full sm:w-auto">
+                        SENKAIMON
                     </button>
-                    <button id="btn-logout" class="w-full border border-zinc-900 text-zinc-600 py-2 text-xs font-semibold tracking-widest mt-4 hover:border-red-900/50 hover:text-red-400 transition-all duration-300 uppercase">
-                        FECHAR PORTAL
-                    </button>
-                </div>
-                
-            </div>
 
-            <p class="text-[10px] tracking-[0.5em] text-zinc-600 uppercase mb-3 font-mono pt-2 md:pt-0">// PAINEL DE CONTROLE</p>
-            <h1 class="font-serif text-4xl md:text-5xl tracking-[0.3em] text-zinc-200 uppercase">SOUL SOCIETY</h1>
-            <p id="user-email-header" class="text-zinc-500 text-[11px] tracking-[0.15em] mt-3 uppercase font-mono"></p>
+                    <div id="settings-menu" style="display: none;" class="absolute right-0 top-full mt-2 border border-zinc-800/80 backdrop-blur-md bg-zinc-950/95 p-5 w-64 shadow-2xl shadow-black text-left z-50">
+                        <p id="user-display" class="text-zinc-400 text-[10px] tracking-widest uppercase mb-4 font-mono">// Identidade Carregada</p>
+                        
+                        <button id="btn-abrir-perfil" onclick="abrirPerfil()" class="w-full border border-zinc-800 text-amber-500 py-2 text-xs font-semibold tracking-widest mb-3 hover:border-amber-500 hover:bg-amber-950/20 transition-all duration-300 uppercase font-mono">
+                            👤 PERFIL SHINIGAMI
+                        </button>
+
+                        <input id="input-nome" type="text" placeholder="Alterar Assinatura de Reiatsu..." class="w-full bg-zinc-900/60 p-2.5 text-xs mb-3 border border-zinc-800 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all font-mono">
+                        <button id="btn-salvar" class="w-full border border-zinc-800 text-zinc-400 py-2 text-xs font-semibold tracking-widest hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase">
+                            SINCRONIZAR
+                        </button>
+
+                        <!-- Seletor de Personalidade no Menu -->
+                        <div class="mt-4 border-t border-zinc-800 pt-3 font-mono">
+                            <p class="text-[10px] tracking-[0.2em] text-zinc-500 uppercase mb-2">// CANAL ESPIRITUAL</p>
+                                <select id="seletor-personagem" class="w-full bg-zinc-950 border border-zinc-800 text-zinc-400 text-xs p-2 focus:outline-none focus:border-zinc-600 transition-all cursor-pointer">
+                            <option value="rukia">Kuchiki Rukia</option>
+                            <option value="ichigo">Kurosaki Ichigo</option>
+                             <option value="urahara">Urahara Kisuke</option>
+                             <option value="shizuka">Shizuka (Takopi's)</option>
+                             </select>
+                        </div>
+                        
+                        <button id="btn-limpar-memoria" class="w-full border border-zinc-900 text-zinc-500 py-2 text-xs font-semibold tracking-widest mt-3 hover:border-red-900/40 hover:text-red-400 hover:bg-red-950/10 transition-all duration-300 uppercase font-mono">
+                            PURIFICAR REIATSU
+                        </button>
+
+                        <button id="btn-logout" class="w-full border border-zinc-900 text-zinc-600 py-2 text-xs font-semibold tracking-widest mt-3 hover:border-red-900/50 hover:text-red-400 transition-all duration-300 uppercase">
+                            FECHAR PORTAL
+                        </button>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-            
-            <section class="flex flex-col md:h-[420px] h-[380px] p-6 md:p-8 border border-zinc-800/60 backdrop-blur-md bg-gradient-to-b from-zinc-900/30 to-black/60 shadow-xl shadow-black/40">
-                <h2 class="font-serif text-xs tracking-[0.25em] text-zinc-400 mb-4 uppercase border-b border-zinc-900 pb-3 select-none">
-                    Denreishinki // Conexão
-                </h2>
+            <section class="flex flex-col md:h-[460px] h-[420px] p-6 border border-zinc-800/60 backdrop-blur-md bg-gradient-to-b from-zinc-900/30 to-black/60 shadow-xl shadow-black/40 overflow-hidden">
+                <div class="border-b border-zinc-900 pb-3 mb-4 select-none flex items-center justify-between w-full">
+                    <span class="font-serif font-semibold text-xs tracking-[0.15em] text-zinc-300 uppercase whitespace-nowrap">Denreishinki // Conexão</span>
+                    <div class="flex items-center gap-2 flex-shrink-0 text-right">
+    <!-- Adicionamos o id aqui e deixamos o texto limpo para receber a troca -->
+    <span id="nome-personagem-header" class="text-[9px] text-zinc-300 font-mono uppercase tracking-wider block max-w-[80px] sm:max-w-none leading-tight font-semibold">Rukia Kuchiki</span>
+    <div class="w-12 h-12 flex-shrink-0">
+        <img id="avatar-rukia" src="img/rukia_normal.png" alt="Rukia" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid #27272a; display: block;" class="transition-all duration-300">
+    </div>
+</div>
+                </div>
                 
                 <div id="chat-box" class="flex-1 overflow-y-auto mb-4 text-xs text-zinc-400 font-mono space-y-3 pr-2 scrollbar-thin"></div>
                 
-                <div class="flex gap-2">
-                    <input id="input-chat" type="text" placeholder="Transmitir mensagem para a Tenente..." class="flex-1 bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all">
-                    <button id="btn-perguntar" class="border border-zinc-800 text-zinc-400 px-5 text-xs font-semibold tracking-widest hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase">
+                <div class="flex gap-2 pt-2 border-t border-zinc-900/50">
+                    <input id="input-chat" type="text" placeholder="Transmitir mensagem..." class="flex-1 bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all min-w-0">
+                    <button id="btn-perguntar" onclick="enviarPergunta()" class="border border-zinc-800 text-zinc-400 px-4 text-xs font-semibold tracking-widest hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase flex-shrink-0">
                         ENVIAR
                     </button>
                 </div>
             </section>
 
-            <section class="flex flex-col md:h-[420px] h-[380px] p-6 md:p-8 border border-zinc-800/60 backdrop-blur-md bg-gradient-to-b from-zinc-900/30 to-black/60 shadow-xl shadow-black/40">
-                <h2 class="font-serif text-xs tracking-[0.25em] text-zinc-400 mb-4 uppercase border-b border-zinc-900 pb-3 select-none">
-                    Cofre da Central 46 — Registros
-                </h2>
-                
-                <div class="space-y-3 mb-4">
-                    <input id="input-titulo" type="text" placeholder="Classificação do Alvo (ex: Senkaimon)..." class="w-full bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all">
-                    <input id="input-conteudo" type="text" placeholder="Dados Restritos (Conteúdo criptografado)..." class="w-full bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all">
-                    <button id="btn-salvar-segredo" class="w-full border border-zinc-800 text-zinc-400 py-2.5 text-xs font-semibold tracking-[0.2em] hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase">
-                        SELAR REGISTRO
-                    </button>
-                </div>
-                
-                <div id="lista-segredos" class="flex-1 overflow-y-auto text-xs text-zinc-500 font-mono space-y-2 pr-2 scrollbar-thin"></div>
-            </section>
+            <div class="flex flex-col gap-6 md:h-[460px] h-auto">
+                <section class="flex flex-col flex-1 p-6 border border-zinc-800/60 backdrop-blur-md bg-gradient-to-b from-zinc-900/30 to-black/60 shadow-xl shadow-black/40 overflow-hidden min-h-[280px]">
+                    <h2 class="font-serif font-semibold text-xs tracking-[0.15em] text-zinc-300 mb-4 uppercase border-b border-zinc-900 pb-3 select-none">
+                        Cofre da Central 46 — Registros
+                    </h2>
+                    
+                    <div class="space-y-3 mb-4">
+                        <input id="input-titulo" type="text" placeholder="Classificação do Alvo (ex: Senkaimon)..." class="w-full bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all">
+                        <input id="input-conteudo" type="text" placeholder="Dados Restritos (Conteúdo criptografado)..." class="w-full bg-transparent border-b border-zinc-800 p-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-all">
+                        <button id="btn-salvar-segredo" class="w-full border border-zinc-800 text-zinc-400 py-2.5 text-xs font-semibold tracking-[0.2em] hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase">
+                            SELAR REGISTRO
+                        </button>
+                    </div>
+                    
+                    <div id="lista-segredos" class="flex-1 overflow-y-auto text-xs text-zinc-500 font-mono space-y-2 pr-2 scrollbar-thin"></div>
+                </section>
 
+                <section class="border border-zinc-800 bg-zinc-950/40 p-4 font-mono uppercase tracking-wider relative overflow-hidden flex-shrink-0">
+                    <div class="absolute top-0 left-0 w-full h-[1px] bg-red-950/40 animate-bounce"></div>
+                    <div class="flex items-center justify-between border-b border-zinc-900 pb-2 mb-2 select-none">
+                        <h3 class="text-[10px] text-zinc-500 font-semibold tracking-widest">// SENSOR DE HOLLOWS // RADAR_KARAKURA</h3>
+                        <span class="flex h-1.5 w-1.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-600"></span>
+                        </span>
+                    </div>
+                    <div id="hollow-logs" class="space-y-1 text-[10px] leading-relaxed">
+                        <div class="text-zinc-600">[SISTEMA] CONECTANDO À REDE DE RASTREAMENTO...</div>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
 
-    <footer class="w-full pb-6 text-center font-mono text-[8px] tracking-[0.3em] text-zinc-700 uppercase select-none">
-        CRYPT_ENC // SECTOR_46_APPROVED // MOTA_013
+    <div id="modal-galeria" style="display: none;" class="fixed top-0 left-0 w-screen h-screen bg-black/85 backdrop-blur-md z-[20000] flex justify-center items-center p-4">
+        <div class="border border-zinc-700 bg-zinc-900/95 p-6 max-w-md w-full shadow-2xl shadow-black rounded-lg text-center">
+            <p class="text-[10px] tracking-[0.4em] text-zinc-300 uppercase mb-2 font-mono font-bold">// ARQUIVOS DE ARTE DE GRAU SHINIGAMI</p>
+            <h3 class="text-white text-base font-serif font-bold tracking-widest uppercase mb-4 border-b border-zinc-800 pb-2">Esquema Gráfico de Almas</h3>
+            
+            <div class="bg-white p-4 border border-zinc-300 rounded mb-4 shadow-inner">
+                <img src="img/desenho-r2.png" alt="Desenho de coelho da Rukia" class="w-full max-h-56 object-contain mx-auto cursor-zoom-in" onclick="abrirZoom(this.src)">
+            </div>
+            
+            <p class="text-zinc-200 text-xs font-mono italic mb-6 bg-black/40 p-3 border border-zinc-800 rounded">
+                "Se a sua mente simplória de humano não consegue processar os fluxos espirituais, eu desenharei mais coelhos!"
+            </p>
+            
+            <button onclick="fecharGaleria()" class="border border-zinc-600 bg-zinc-950 text-zinc-200 px-6 py-2.5 text-xs font-mono font-bold tracking-widest hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase w-full rounded">
+                FECHAR RELATÓRIO
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-perfil" style="display: none;" class="fixed top-0 left-0 w-screen h-screen bg-black/85 backdrop-blur-md z-[20000] flex justify-center items-center p-4">
+        <div class="border border-zinc-700 bg-zinc-900/95 p-6 max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-black text-center font-mono uppercase tracking-wider rounded-lg scrollbar-thin">
+            <p class="text-[10px] tracking-[0.4em] text-zinc-300 uppercase mb-2 font-bold">// REGISTRO DE REIATSU // SEIREITEI</p>
+            <h3 id="perfil-titulo-nome" class="text-white text-base font-serif font-bold tracking-widest uppercase mb-6 border-b border-zinc-800 pb-2">CARREGANDO...</h3>
+            
+            <div class="mb-6 text-left border border-zinc-800 bg-black/60 p-4 rounded shadow-inner">
+                <div class="flex justify-between text-xs mb-2 font-bold">
+                    <span class="text-zinc-200">FLUXO ESPIRITUAL (REIATSU)</span>
+                    <span id="reiatsu-porcentagem" class="text-red-400 font-bold animate-pulse">--%</span>
+                </div>
+                <div class="w-full h-3 bg-zinc-950 border border-zinc-800 p-[1px] rounded-sm">
+                    <div id="reiatsu-barra" class="h-full bg-gradient-to-r from-red-950 to-red-600 border-r border-red-400 transition-all duration-500" style="width: 0%;"></div>
+                </div>
+                <div class="text-[9px] text-zinc-400 mt-2 font-semibold tracking-normal">// ADVERTÊNCIA: ESTABILIDADE DE REIATSU SUJEITA A OSCILAÇÕES EM COMBATE</div>
+            </div>
+
+            <div class="mb-6 text-left">
+                <p class="text-xs text-zinc-200 mb-3 font-bold tracking-widest">// INSÍGNIAS LIBERADAS</p>
+                <div class="grid grid-cols-3 gap-2.5 text-center text-[10px]">
+                    <div class="border border-zinc-700 bg-zinc-950 p-2.5 text-zinc-100 rounded shadow hover:border-amber-500/50 transition-all" title="Acesso ao Portal do Mundo Real">
+                        <div class="text-lg mb-1">⛩️</div>
+                        <span class="block tracking-tight font-bold text-amber-400">SENKAIMON</span>
+                    </div>
+                    <div class="border border-zinc-700 bg-zinc-950 p-2.5 text-zinc-100 rounded shadow hover:border-amber-500/50 transition-all" title="Mensageiro do Inferno Ativo">
+                        <div class="text-lg mb-1">🦋</div>
+                        <span class="block tracking-tight font-bold text-amber-400">JIGOKUCHU</span>
+                    </div>
+                    <div id="badge-chappy-padrao" class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner" title="Fale com a Rukia sobre coelhos para liberar">
+                        <div class="text-lg mb-1 grayscale">🐰</div>
+                        <span class="block tracking-tight">CHAPPY</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">⚔️</div>
+                        <span class="block tracking-tight">Shinigami</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">🏹</div>
+                        <span class="block tracking-tight">Quincy</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">💀</div>
+                        <span class="block tracking-tight">Hollow</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">🎭</div>
+                        <span class="block tracking-tight">Arrancar</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">🔺</div>
+                        <span class="block tracking-tight">Fullbringer</span>
+                    </div>
+                    <div class="border border-zinc-800 bg-black/40 p-2.5 text-zinc-500 border-dashed rounded opacity-50 shadow-inner">
+                        <div class="text-lg mb-1 grayscale">🟢</div>
+                        <span class="block tracking-tight">Visored</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6 text-left border-t border-zinc-800 pt-4">
+                <p class="text-xs text-zinc-200 mb-3 font-bold tracking-widest">// CONQUISTAS DE POSTO MILITAR</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-[11px]">
+                    
+                    <div class="border border-zinc-800 bg-zinc-950/60 p-2 flex items-center gap-3 rounded">
+                        <div class="w-8 h-8 rounded bg-purple-950/40 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-xs shrink-0 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
+                            🪶
+                        </div>
+                        <div class="text-left">
+                            <div class="text-zinc-200 font-semibold uppercase tracking-wider text-[10px]">13º Esquadrão</div>
+                            <div class="text-zinc-500 text-[9px] lowercase tracking-normal">Membro sob ordens de Rukia.</div>
+                        </div>
+                    </div>
+
+                    <div id="badge-oficial" class="border border-zinc-900 bg-zinc-950/20 p-2 flex items-center gap-3 opacity-40 grayscale transition-all duration-500 rounded">
+                        <div class="w-8 h-8 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-600 font-bold text-xs shrink-0 icon-slot">
+                            🎖️
+                        </div>
+                        <div class="text-left">
+                            <div class="text-zinc-400 font-semibold uppercase tracking-wider text-[10px] badge-title">Oficial Sentinela</div>
+                            <div class="text-zinc-600 text-[9px] lowercase tracking-normal badge-desc">Reiatsu insuficiente (Requer 85%).</div>
+                        </div>
+                    </div>
+
+                    <div id="badge-central46" class="border border-zinc-900 bg-zinc-950/20 p-2 flex items-center gap-3 opacity-40 grayscale transition-all duration-500 rounded">
+                        <div class="w-8 h-8 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-600 font-bold text-xs shrink-0 icon-slot">
+                            📜
+                        </div>
+                        <div class="text-left">
+                            <div class="text-zinc-400 font-semibold uppercase tracking-wider text-[10px] badge-title">Agente Central 46</div>
+                            <div class="text-zinc-600 text-[9px] lowercase tracking-normal badge-desc">Cofre de segredos vazio.</div>
+                        </div>
+                    </div>
+
+                    <div id="badge-idiota" class="border border-zinc-900 bg-zinc-950/20 p-2 flex items-center gap-3 opacity-40 grayscale transition-all duration-500 rounded">
+                        <div class="w-8 h-8 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-600 font-bold text-xs shrink-0 icon-slot">
+                            💢
+                        </div>
+                        <div class="text-left">
+                            <div class="text-zinc-400 font-semibold uppercase tracking-wider text-[10px] badge-title">Alvo do Chappy</div>
+                            <div class="text-zinc-600 text-[9px] lowercase tracking-normal badge-desc">Ainda não irritou a Kuchiki.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <button onclick="fecharPerfil()" class="border border-zinc-600 bg-zinc-950 text-zinc-200 px-6 py-2.5 text-xs font-bold hover:border-zinc-200 hover:bg-zinc-100 hover:text-black transition-all duration-300 uppercase w-full rounded shadow-md tracking-widest mt-2">
+                FECHAR REGISTRO
+            </button>
+        </div>
+    </div>
+
+    <div id="discord-lightbox" onclick="this.style.display='none'" style="display: none;" class="fixed top-0 left-0 w-screen h-screen bg-black/95 z-[30000] flex justify-center items-center cursor-zoom-out p-4 animate-fade-in">
+        <img id="lightbox-img" src="" alt="Zoom" class="max-w-full max-h-full object-contain shadow-2xl transition-transform duration-200 transform scale-95">
+    </div>
+
+    <footer class="w-full mt-12 pb-6 text-center font-mono text-[9px] tracking-[0.3em] text-zinc-400 uppercase select-none">
+        CRYPT_ENC // SECTOR_46_APPROVED // MOTA_06
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
